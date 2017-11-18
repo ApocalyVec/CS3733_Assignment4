@@ -32,6 +32,7 @@ public class  UtilityTests{
     @Test
     public void XInARowTest() {
         utility u = new utility();
+        assertTrue(!u.XInARow(3,0, "I"));
         assertTrue(u.XInARow(3,0, "XXXCC"));
         assertTrue(!u.XInARow(3,1, "MCCCCI"));
         assertTrue(u.XInARow(3, 2, "MMSSSIIIIIIIIIII"));
@@ -56,5 +57,17 @@ public class  UtilityTests{
         assertTrue(u.isTwice(1, 'c', "ccaabb"));
         assertTrue(u.isTwice(0, 'c', "ccaabb"));
         assertTrue(!u.isTwice(0,'e', "ebapdj"));
+    }
+
+    @Test
+    public void inOrderTest() {
+        utility u = new utility();
+        assertTrue(u.inOrder('M', 'D'));
+        assertTrue(u.inOrder('I', 'I'));
+        assertTrue(u.inOrder('M', 'M'));
+        assertTrue(u.inOrder('M', 'I'));
+        assertTrue(u.inOrder('C', 'm'));
+        assertTrue(!u.inOrder('I', 'M'));
+        assertTrue(!u.inOrder('w', 'X'));
     }
 }

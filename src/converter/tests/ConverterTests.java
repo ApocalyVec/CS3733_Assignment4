@@ -37,11 +37,5 @@ public class ConverterTests {
         ElbonianArabicConverter Converter = new ElbonianArabicConverter("-1");
     }
 
-    @Test
-    public void isNumericTest() {
-        utility u = new utility();
-        assertTrue(u.isNumeric("123"));
-        assertTrue(!u.isNumeric("abc"));
-    }
-    // TODO Add more test cases
+    
 }

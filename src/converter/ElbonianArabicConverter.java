@@ -15,7 +15,8 @@ public class ElbonianArabicConverter {
 
     // A string that holds the number (Elbonian or Arabic) you would like to convert
     private final String number;
-    private final boolean isArabic;
+    private int Arabic;
+    private boolean isArabic;
 
     //default constructor
     public ElbonianArabicConverter() {
@@ -37,42 +38,61 @@ public class ElbonianArabicConverter {
      * in the Elbonian number system.
      */
     public ElbonianArabicConverter(String number) throws MalformedNumberException, ValueOutOfBoundsException {
-        utility u = new utility();
-
-        if(u.isNumeric(number)) {
-            isArabic = true;
-        }
-        else isArabic = false;
-
         this.number = number;
 
-        try{
-            for(int i=0; i<number.length(); i++){
-                char currChar = number.charAt(i);
-                if(!u.isValidLetter(currChar)){
-                    throw new MalformedNumberException("Invalid Letter: "+ number.charAt(i));
-                }
+        utility u = new utility();
 
-                if(u.isMultipleof10(currChar)) {
-                    if(u.XInARow(3, i, number)) {
-                        throw new MalformedNumberException("More than 4 of 10's multiples in a row starting at " + i + ", The letter is " + currChar);
-                    }
+
+        if(u.isNumeric(number)) { //if is an arabic  number input
+            isArabic = true;
+            this.Arabic = Integer.parseInt(number);
+//            try{
+                if(this.Arabic < 1 || this.Arabic > 4332) {
+                    throw new ValueOutOfBoundsException("Value out of bound");
                 }
-                else { //not a multiple of 10
+            // try catch block disabled to pass the JUnit test
+//            }catch (ValueOutOfBoundsException e) {
+//                e.printStackTrace();
+//                System.out.println(e);
+//            }
+        }
+
+        else { //if is a elbonic number input
+            isArabic = false;
+//             try{
+                if (number.length() == 0)
+                    throw new NumberFormatException("An empty string does not define a Roman numeral.");
+                for(int i=0; i<number.length(); i++){
+                    char currChar = number.charAt(i);
+                    if(!u.isValidLetter(currChar)){
+                        throw new MalformedNumberException("Invalid Letter: "+ number.charAt(i));
+                    }
+
+                    if(u.isMultipleof10(currChar)) {
+                        if(u.XInARow(3, i, number)) {
+                            throw new MalformedNumberException("More than 4 of 10's multiples in a row starting at " + i + ", The letter is " + currChar);
+                        }
+                    }
+                    else { //not a multiple of 10
 //                    if(u.XInARow(2,i,number)) {
 //                        throw new MalformedNumberException("More than 2 of non-10's multiples in a row starting at " + i + ", The letter is " + currChar);
 //                    }
-                    if(u.isTwice(i, currChar, number)) {
-                        throw new MalformedNumberException("More than 2 of non-10's multiples found, the character is " + currChar);
+                        if(u.isTwice(i, currChar, number)) {
+                            throw new MalformedNumberException("More than 2 of non-10's multiples found, the character is " + currChar);
+                        }
+                    }
+                    if(i < number.length()-1){
+                        if(u.inOrder(currChar, number.charAt(i+1))) {
+                            throw new MalformedNumberException("Letter out of order, this character is " + currChar + " and its index is " + i);
+                        }
                     }
                 }
-
-
-            }
-
-        } catch (MalformedNumberException e){}
-
-
+                // try catch block disabled to pass the JUnit test
+//            } catch (MalformedNumberException e){
+//                e.printStackTrace();
+//                System.out.println(e);
+//            }
+        }
     }
 
     /**
@@ -82,9 +102,12 @@ public class ElbonianArabicConverter {
      * @return An arabic value
      */
     public int toArabic() {
-        // TODO Fill in the method's body
-
-        return 1;
+        utility u = new utility();
+        int ret_val = 0;
+        for(int i = 0; i < this.number.length(); i++) {
+            ret_val += u.CharToNumber(this.number.charAt(i));
+        }
+        return ret_val;
     }
 
     /**
